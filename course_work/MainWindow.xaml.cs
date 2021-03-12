@@ -53,9 +53,16 @@ namespace Kursovaya
             if (str < 20) matrix2.EnableRowVirtualization = false;
             matrix2.HorizontalContentAlignment = new HorizontalAlignment();
             bw = new BackgroundWorker();
+            bw.WorkerReportsProgress = true;
             bw.DoWork += Bw_DoWork;
+            bw.ProgressChanged += backgroundWorker_ProgressChanged;
             bw.RunWorkerCompleted += BW_RunWorkerCompleted;
             bw.RunWorkerAsync(valueOfMatrix);
+        }
+
+        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            pbCalculationProgress.Value = e.ProgressPercentage;
         }
 
         void Bw_DoWork(object sender, DoWorkEventArgs e)
@@ -96,6 +103,7 @@ namespace Kursovaya
                     row[j] = cell;
                 }
                 Table.Rows.Add(row);
+                bw.ReportProgress(i);
             }
             e.Result = Table;
         }
@@ -114,26 +122,26 @@ namespace Kursovaya
             }
         }
 
-        void OnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-        {
-            DataTemplate dt = null;
+        //void OnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        //{
+        //    DataTemplate dt = null;
 
-            if (e.PropertyType == typeof(Cell))
-                dt = (DataTemplate)Resources["GridCell"];
+        //    if (e.PropertyType == typeof(Cell))
+        //        dt = (DataTemplate)Resources["GridCell"];
 
-            if (dt != null)
-            {
-                DataGridTemplateColumn c = new DataGridTemplateColumn()
-                {
-                    CellTemplate = dt,
-                    Header = e.Column.Header,
-                    HeaderTemplate = e.Column.HeaderTemplate,
-                    HeaderStringFormat = e.Column.HeaderStringFormat,
-                    SortMemberPath = e.PropertyName
-                };
-                e.Column = c;
-            }
-        }
+        //    if (dt != null)
+        //    {
+        //        DataGridTemplateColumn c = new DataGridTemplateColumn()
+        //        {
+        //            CellTemplate = dt,
+        //            Header = e.Column.Header,
+        //            HeaderTemplate = e.Column.HeaderTemplate,
+        //            HeaderStringFormat = e.Column.HeaderStringFormat,
+        //            SortMemberPath = e.PropertyName
+        //        };
+        //        e.Column = c;
+        //    }
+        //}
         private void SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             (sender as DataGrid).SelectionUnit = DataGridSelectionUnit.Cell;

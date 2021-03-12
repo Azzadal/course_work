@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="650" Width="1000">
     <Window.Resources>
-        <local:Converter x:Key="myConverter"/>
+        <!--<local:Converter x:Key="myConverter"/>-->
         <DataTemplate x:Key="GridCell">
-            <TextBlock DataContext="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Converter={StaticResource myConverter}}" Text="{Binding Path=Value}" Background="{Binding Path=Color}"/>
+            <!--<TextBlock DataContext="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Converter={StaticResource myConverter}}" Text="{Binding Path=Value}" Background="{Binding Path=Color}"/>-->
         </DataTemplate>
         <ControlTemplate TargetType="Button" x:Key="btTemplate">
             <Border x:Name="buttonBorder" CornerRadius="20" BorderBrush="CadetBlue" BorderThickness="2"
@@ -38,9 +38,9 @@
         <TextBox x:Name="colField" HorizontalAlignment="Left" Height="26" Margin="97,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="61" Text="10" Grid.Row="1"/>
         <Label Content="строки" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Height="25" Grid.Row="1"/>
         <Label Content="столбцы" HorizontalAlignment="Left" Margin="97,36,0,0" VerticalAlignment="Top" Width="61" RenderTransformOrigin="0.5,0.5" Grid.Row="1"/>
-        <DataGrid x:Name="matrix2" AutoGeneratingColumn="OnAutoGeneratingColumn"  HorizontalAlignment="Left" Height="586" Margin="246,11,0,0" VerticalAlignment="Top" Width="690" SelectedCellsChanged="SelectedCellsChanged" Grid.Row="1"/>
+        <DataGrid x:Name="matrix2"                                 HorizontalAlignment="Left" Height="586" Margin="246,11,0,0" VerticalAlignment="Top" Width="690" SelectedCellsChanged="SelectedCellsChanged" Grid.Row="1"/>
         <Button x:Name="button" Content="Матрица" Template="{StaticResource btTemplate}" Margin="10,122,867,0" VerticalAlignment="Top" Height="52" Click="Button_Click" Grid.Row="1"/>
         <ProgressBar DockPanel.Dock="Bottom" Height="18" Name="pbCalculationProgress" Margin="0,198,765,410" Grid.Row="1" />
     </Grid>
-
+    <!--AutoGeneratingColumn="OnAutoGeneratingColumn"-->
 </Window>
