@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
+﻿using System.Data;
 
 namespace Kursovaya
 {
-    static class CreateTable
+    static class Table
     {
         // проверка на простое число
         public static bool IsPrime(int number)
@@ -25,7 +16,7 @@ namespace Kursovaya
         }
 
         // получение DataTable из массива
-        public static DataTable ToDataTable(int[,] matrix)
+        public static DataTable CreateDataTable(int[,] matrix)
         {
             var res = new DataTable();
 

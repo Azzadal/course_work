@@ -1,20 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Kursovaya
 {
@@ -24,15 +12,13 @@ namespace Kursovaya
     public partial class MainWindow : Window
     {
         public static int str;
-        private Random random = new Random();
-        public DataTable InputTable { get; set; }
-        public DataTable Table { get; set; }
         public static int col;
-        BackgroundWorker bw;
-
+        private Random random = new Random();
+        public DataTable inputTable { get; set; }
+        public DataTable outputTable { get; set; }
         public MainWindow()
         {
-            InitializeComponent(); 
+            InitializeComponent();
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -47,32 +33,16 @@ namespace Kursovaya
                 return;
             }
 
-            ValueOfMatrix valueOfMatrix = new ValueOfMatrix(str, col);
-            //некоторые свойства для сетки
+            // некоторые свойства для сетки
+            // запретить сортировку столбцов
             matrix2.CanUserSortColumns = false;
+            // выключить виртуализацию строк
             if (str < 20) matrix2.EnableRowVirtualization = false;
             matrix2.HorizontalContentAlignment = new HorizontalAlignment();
-            bw = new BackgroundWorker();
-            bw.WorkerReportsProgress = true;
-            bw.DoWork += Bw_DoWork;
-            bw.ProgressChanged += backgroundWorker_ProgressChanged;
-            bw.RunWorkerCompleted += BW_RunWorkerCompleted;
-            bw.RunWorkerAsync(valueOfMatrix);
-        }
 
-        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            pbCalculationProgress.Value = e.ProgressPercentage;
-        }
-
-        void Bw_DoWork(object sender, DoWorkEventArgs e)
-        {
-            ValueOfMatrix input = (ValueOfMatrix)e.Argument;
-            int str = input.Str;
-            int col = input.Col;
             int[,] arr = new int[str, col];
 
-            //заполнение двумерного массива случайными числами
+            // заполнение двумерного массива случайными числами
             for (int i = 0; i < str; i++)
             {
                 for (int j = 0; j < col; j++)
@@ -80,72 +50,63 @@ namespace Kursovaya
                     arr[i, j] = random.Next(1, 150);
                 }
             }
-            //заполнение DataTable данными из массива
-            InputTable = CreateTable.ToDataTable(arr);
-            Table = new DataTable();
+            // заполнение DataTable данными из массива
+            inputTable = Table.CreateDataTable(arr);
+         
+            outputTable = new DataTable();
             int b = 0;
             //создание DataTable на основе исходной, с пользовательским типом данных
-            foreach (DataColumn column in InputTable.Columns)
+            foreach (DataColumn column in inputTable.Columns)
             {
                 ++b;
-                Table.Columns.Add("c" + b, typeof(Cell));
+                outputTable.Columns.Add("c" + b, typeof(Cell));
             }
             //заполнение Table
-            for (int i = 0; i < InputTable.Rows.Count; i++)
+            for (int i = 0; i < inputTable.Rows.Count; i++)
             {
-                var row = Table.NewRow();
-                var values = InputTable.Rows[i].ItemArray;
+                var row = outputTable.NewRow();
+                var values = inputTable.Rows[i].ItemArray;
                 SolidColorBrush colors = Brushes.Salmon;
 
-                for (int j = 0; j < InputTable.Columns.Count; j++)
+                for (int j = 0; j < inputTable.Columns.Count; j++)
                 {
                     Cell cell = new Cell(values[j] as string, colors);
                     row[j] = cell;
                 }
-                Table.Rows.Add(row);
-                bw.ReportProgress(i);
+                outputTable.Rows.Add(row);
             }
-            e.Result = Table;
-        }
 
-        private void BW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+            matrix2.ItemsSource = outputTable.DefaultView;
+        }
+        void OnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
-            if (e.Error != null)
+            DataTemplate dt = null;
+
+            if (e.PropertyType == typeof(Cell))
+                dt = (DataTemplate)Resources["GridCell"];
+
+            if (dt != null)
             {
-                //Ошибка была сгенерирована обработчиком события DoWork
-                MessageBox.Show(e.Error.Message, "Произошла ошибка");
-            }
-            else
-            {
-                DataTable dt = e.Result as DataTable;
-                matrix2.ItemsSource = dt.DefaultView;
+                DataGridTemplateColumn c = new DataGridTemplateColumn()
+                {
+                    CellTemplate = dt,
+                    Header = e.Column.Header,
+                    HeaderTemplate = e.Column.HeaderTemplate,
+                    HeaderStringFormat = e.Column.HeaderStringFormat,
+                    SortMemberPath = e.PropertyName
+                };
+                e.Column = c;
             }
         }
-
-        //void OnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-        //{
-        //    DataTemplate dt = null;
-
-        //    if (e.PropertyType == typeof(Cell))
-        //        dt = (DataTemplate)Resources["GridCell"];
-
-        //    if (dt != null)
-        //    {
-        //        DataGridTemplateColumn c = new DataGridTemplateColumn()
-        //        {
-        //            CellTemplate = dt,
-        //            Header = e.Column.Header,
-        //            HeaderTemplate = e.Column.HeaderTemplate,
-        //            HeaderStringFormat = e.Column.HeaderStringFormat,
-        //            SortMemberPath = e.PropertyName
-        //        };
-        //        e.Column = c;
-        //    }
-        //}
         private void SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             (sender as DataGrid).SelectionUnit = DataGridSelectionUnit.Cell;
             (sender as DataGrid).SelectedCells.Clear();
+        }
+
+        private void matrix2_AutoGeneratedColumns(object sender, EventArgs e)
+        {
+           
         }
     }
 }

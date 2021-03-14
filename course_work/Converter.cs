@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Kursovaya
 {
-    class Converter : IValueConverter
+    public class Converter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -20,12 +20,12 @@ namespace Kursovaya
 
             int col = MainWindow.col;
             DataGridCell cell = value as DataGridCell;
-            if (cell == null)
-                return null;
+            if (cell == null) return null;
             
             cell.Style = st;
             DataRowView drv = cell.DataContext as DataRowView;
             if (drv == null) return null;
+
             for (int i = 0; i < col; i++)
             {
                 try
@@ -40,7 +40,7 @@ namespace Kursovaya
                         colorOfCell = dataCell.Color;
                     }
                     //если значение ячейки простое число
-                    if (CreateTable.IsPrime(Int32.Parse(valueOfCell)))
+                    if (Table.IsPrime(Int32.Parse(valueOfCell)))
                     {
                         dataCell.Color = Brushes.LightSkyBlue;
                     }
@@ -50,10 +50,10 @@ namespace Kursovaya
                     MessageBox.Show(ex.ToString());
                 }
             }
+
             return drv.Row[cell.Column.SortMemberPath];
         }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
