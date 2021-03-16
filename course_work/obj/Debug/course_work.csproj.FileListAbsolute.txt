@@ -65,3 +65,6 @@ C:\Users\Andrey\source\repos\course_work\course_work\obj\Debug\GeneratedInternal
 C:\Users\Andrey\source\repos\course_work\course_work\bin\Debug\FontAwesome.WPF.dll
 C:\Users\Andrey\source\repos\course_work\course_work\bin\Debug\FontAwesome.WPF.xml
 C:\Users\Andrey\source\repos\course_work\course_work\obj\Debug\course_work.csproj.CopyComplete
+C:\Users\andkv\source\repos\course_work\course_work\bin\Debug\FontAwesome.WPF.dll
+C:\Users\andkv\source\repos\course_work\course_work\bin\Debug\FontAwesome.WPF.xml
+C:\Users\andkv\source\repos\course_work\course_work\obj\Debug\course_work.csproj.CopyComplete

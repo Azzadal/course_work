@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Kursovaya
 {
-    class Cell : DependencyObject
+    class Cell
     {
         public string Value { get; set; }
         public SolidColorBrush Color { get; set; }

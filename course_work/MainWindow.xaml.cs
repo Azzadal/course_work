@@ -20,7 +20,7 @@ namespace Kursovaya
         {
             InitializeComponent();
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void onCreateMatrix(object sender, RoutedEventArgs e)
         {
             if (!Int32.TryParse(strField.Text, out str))
             {
